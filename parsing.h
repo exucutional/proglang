@@ -1,7 +1,7 @@
 /*
  * parsing.h
  *
- *  Created on: 7 февр. 2019 г.
+ *  Created on: 7 пїЅпїЅпїЅпїЅ. 2019 пїЅ.
  *      Author: Exucutional
  */
 
@@ -10,12 +10,17 @@
 
 //int x = (56 + 3) * 6;
 
-struct node_t* factor(struct list_t* token); //скобки
+struct node_t* factor(struct list_t* token);
+struct node_t* term(struct list_t* token);
+struct node_t* muldiv(struct list_t* token, struct node_t* node);
+struct node_t* addsub(struct list_t* token, struct node_t* node);
+
+/*
 struct node_t* condition(void);
-struct node_t* term(void);
+struct node_t* term(struct list_t* token);
 struct node_t* prim(struct list_t* token);
 struct node_t* statement(void);
 struct node_t* expression(void);
 struct node_t* block(void);
-
+*/
 #endif /* PARSING_H_ */

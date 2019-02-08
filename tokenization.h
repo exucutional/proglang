@@ -1,7 +1,7 @@
 /*
  * tokenization.h
  *
- *  Created on: 5 февр. 2019 г.
+ *  Created on: 5 пїЅпїЅпїЅпїЅ. 2019 пїЅ.
  *      Author: Exucutional
  */
 
@@ -49,14 +49,19 @@ struct list_t
 	struct list_t* next;
 };
 
+struct token_t
+{
+	struct list_t* token;
+};
+
 struct list_t* list_create(list_data data, list_type type, struct list_t* next);
 struct list_t* str_to_tokens(char** str_ptr);
 struct list_t* list_num(char** str_ptr);
+struct list_t* get
 int name_table_search(const char* name);
 char* get_token(char** str_ptr);
 void name_table_dump();
 void name_table_dtor();
 void list_dump(struct list_t* list);
 void list_dtor(struct list_t* list);
-
 #endif /* TOKENIZATION_H_ */
