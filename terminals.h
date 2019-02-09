@@ -1,20 +1,19 @@
 
-DEF_TERM(+, ADD)
-DEF_TERM(-, SUB)
-DEF_TERM(*, MUL)
-DEF_TERM(/, DIV)
-DEF_TERM((, LP)
-DEF_TERM(), RP)
-DEF_TERM(=, EQ)
-DEF_TERM(==, EQL)
-DEF_TERM(<, LSS)
-DEF_TERM(<=, LEQ)
-DEF_TERM(>, GTR)
-DEF_TERM(>=, GEQ)
-DEF_TERM(;, SEMICOLON)
-DEF_TERM(!, NOT)
-DEF_TERM(&&, AND)
-DEF_TERM(||, OR)
-DEF_TERM({, BEGINSYM)
-DEF_TERM(}, ENDSYM)
-
+DEF_TERM("+", ADD)			//0
+DEF_TERM("-", SUB)			//1
+DEF_TERM("*", MUL)			//2
+DEF_TERM("/", DIV)			//3
+DEF_TERM("(", LP)			//4
+DEF_TERM(")", RP)			//5
+DEF_TERM("=", EQ)			//6
+DEF_TERM("==", EQL)			//7
+DEF_TERM("<", LSS)			//8
+DEF_TERM("<=", LEQ)			//9
+DEF_TERM(">", GTR)			//10
+DEF_TERM(">=", GEQ)			//11
+DEF_TERM(";", SEMICOLON)	//12
+DEF_TERM("!", NOT)			//13
+DEF_TERM("&&", AND)			//14
+DEF_TERM("||", OR)			//15
+DEF_TERM("{", BEGINSYM)		//16
+DEF_TERM("}", ENDSYM)		//17

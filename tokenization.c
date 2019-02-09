@@ -32,6 +32,21 @@ void list_dtor(struct list_t* list)
 	}
 }
 
+struct token_t* token_ctor(struct list_t* token_list)
+{
+	struct token_t* token = calloc(1, sizeof(struct token_t));
+	assert(token);
+	token->iterator = token_list;
+	token->token_list = token_list;
+	return token;
+}
+
+void token_dtor(struct token_t* token)
+{
+	list_dtor(token->token_list);
+	free(token);
+}
+
 void list_dump(struct list_t* list)
 {
 	static int dump_flag;
@@ -42,7 +57,7 @@ void list_dump(struct list_t* list)
 	if(list) {
 		printf("%lf %d -> ", list->data, list->type);
 		list_dump(list->next);
-	} else printf("NULL");
+	} else printf("NULL\n");
 }
 
 void name_table_dump()
@@ -59,31 +74,66 @@ void name_table_dtor()
 	name_table_size = 0;
 }
 
+struct list_t* token_get(struct token_t* token)
+{
+	assert(token);
+	return token->iterator;
+}
+
+list_data token_get_data(struct token_t* token)
+{
+	assert(token);
+	return token->iterator->data;
+}
+
+list_type token_get_type(struct token_t* token)
+{
+	assert(token);
+	return token->iterator->type;
+}
+
+struct list_t* token_pop(struct token_t* token)
+{
+	assert(token);
+	assert(token->iterator->next);
+	struct list_t* iter_cur = token->iterator;
+	token->iterator = token->iterator->next;
+	return iter_cur;
+}
+struct token_t* token_next(struct token_t* token)
+{
+	assert(token);
+	if (!token->iterator->next) {
+		fprintf(stderr, "type: %d data: %lf\n", token_get_type(token), token_get_data(token));
+		assert(token->iterator->next);
+	}
+	token->iterator = token->iterator->next;
+	return token;
+}
 struct list_t* str_to_tokens(char** str_ptr)
 {
-	char* token = get_token(str_ptr);
+	assert(str_ptr);
+	char* token = token_read(str_ptr);
 	if (**str_ptr == '\0' && !token)
 		return NULL;
 	if (!token)
 		return  list_num(str_ptr);
-#define DEF_KEYWORD(sym, name)																	\
-	do {																						\
-			if (strcmp(token, #sym) == 0) {														\
-				*str_ptr += sizeof(#sym) - 1;													\
-				free(token);																	\
-				return list_create(name, KEYWORD, str_to_tokens(str_ptr));						\
-			}																					\
+#define DEF_KEYWORD(sym, name)													\
+	do {																		\
+			if (strcmp(token, sym) == 0) {										\
+				free(token);													\
+				return list_create(name, KEYWORD, str_to_tokens(str_ptr));		\
+			}																	\
 } while (0);
 #include "keywords.h"
 #undef DEF_KEYWORD
 
-#define DEF_TERM(sym, name)																	\
-	do {																					\
-			if (strcmp(token, #sym) == 0) {													\
-				*str_ptr += sizeof(#sym) - 1;												\
-				free(token);																\
-				return list_create(name, TERM, str_to_tokens(str_ptr));						\
-			}																				\
+#define DEF_TERM(sym, name)													\
+	do {																	\
+			if (strcmp(token, sym) == 0) {									\
+				free(token);												\
+				return list_create(name, TERM, str_to_tokens(str_ptr));		\
+			}																\
 	} while (0);
 #include "terminals.h"
 #undef DEF_TERM
@@ -96,6 +146,7 @@ struct list_t* str_to_tokens(char** str_ptr)
 
 int name_table_search(const char* name)
 {
+	assert(name);
 	int i = 0;
 	for (; i < name_table_size; i++)
 		if (!strcmp(name_table[i], name))
@@ -107,6 +158,7 @@ int name_table_search(const char* name)
 
 struct list_t* list_num(char** str_ptr)
 {
+	assert(str_ptr);
 	char* iter = *str_ptr;
 	int dot = 0;
 	for (;isdigit(*iter) || *iter == '.'; iter++)
@@ -124,8 +176,9 @@ struct list_t* list_num(char** str_ptr)
 	return NULL;
 }
 
-char* get_token(char** str_ptr)
+char* token_read(char** str_ptr)
 {
+	assert(str_ptr);
 	while(isspace(**str_ptr))
 		(*str_ptr)++;
 	if (**str_ptr == '\0')
@@ -134,18 +187,28 @@ char* get_token(char** str_ptr)
 		return NULL;
 	int token_length = 0;
 	char* iter = *str_ptr;
-	while ((!isspace(*iter) && *iter != '\0') ||
-	#define DEF_TERM(sym, name)	!strncmp(iter, #sym, sizeof(#sym) - 1) ||
-	#include "terminals.h"
-	#undef DEF_TERM
-			0) {
+
+	while (!isspace(*iter) && *iter != '\0' &&
+		#define DEF_TERM(sym, name)	strncmp(iter, sym, sizeof(sym) - 1) &&
+		#include "terminals.h"
+		#undef DEF_TERM
+			1)
+	{
 		token_length++;
 		iter++;
+	}
+	if (!token_length) {
+		#define DEF_TERM(sym, name) 										\
+			do {															\
+					if (!strncmp(iter, sym, sizeof(sym) - 1)) 				\
+						token_length = sizeof(sym) - 1;						\
+				} while (0);
+		#include "terminals.h"
+		#undef DEF_TERM
 	}
 	char* token = calloc(token_length + 1, sizeof(char));
 	token = strncpy(token, *str_ptr, token_length);
 	token[token_length] = '\0';
-
 	*str_ptr += token_length;
 	return token;
 }

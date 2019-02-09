@@ -10,71 +10,166 @@
 #include "parsing.h"
 #include "tree_t.h"
 
-/*
-struct node_t* prim(struct list_t* token)
+#define _DEBUG
+
+#ifdef _DEBUG
+#define DEBUG(code) code
+#else
+#define DEBUG(code)
+#endif
+
+struct node_t* calculation(struct token_t* token)
 {
-	switch (token->type) {
-	case INT:
-			break;
-	case DOUBLE:
-			break;
-	case TERM:
-			break;
-	case IDENT:
-			return node_create(IDENT, token->data, prim(token->next));
-			break;
-	case KEYWORD:
-			return node_create(KEYWORD, token->data, prim(token->next));
-			break;
-	default:
-			fputs("Unknown list type", stderr);
-			break;
-	}
+	DEBUG(printf("calculation: type: %d data: %lf\n", token_get_type(token), token_get_data(token));)
+	return addsub(token, muldiv(token, factor(token)));
 }
-*/
-struct node_t* factor(struct list_t* token)
+
+struct node_t* factor(struct token_t* token)
 {
-	if (!token->type)
-		return NULL;
-	switch (token->type) {
+	DEBUG(printf("factor: type: %d data: %lf\n", token_get_type(token), token_get_data(token));)
+	switch (token_get_type(token)) {
 	case INT:
 	case DOUBLE:
-			return muldiv(token->next, node_create(token->type, token->data, NULL, NULL));
-	case TERM:
-			return term(token, NULL);
 	case IDENT:
-	case KEYWORD:
-			break;
+		{
+			node_data data = token_get_data(token);
+			node_type type = token_get_type(token);
+			if (token_get(token)->next)	{
+				token_next(token);
+				return node_create(type, data, NULL, NULL);
+			}
+			return NULL;
+		}
+	case TERM:
+			return term_calc(token);
 	default:
-			fputs("factor: Unknown token type", stderr);
+			fputs("factor: Unknown token type\n", stderr);
 			return NULL;
 	}
 }
 
-struct node_t* term(struct list_t* token)
+struct node_t* term_calc(struct token_t* token)
 {
-	switch((int)token->data) {
+	DEBUG(printf("term_calc: type: %d data: %lf\n", token_get_type(token), token_get_data(token));)
+	switch((int)token_get_data(token)) {
 	case LP:
-			return factor(token->next);
-			break;
-	case RP:
-			return;
+		{
+			struct node_t* node = calculation(token_next(token));
+			if ((int)token_get_data(token) == RP)
+			{
+				if (token_get(token)->next)
+					token_next(token);
+				return node;
+			}
+			fputs("term_calc: Syntax error(Missing right parenthesis)\n", stderr);
+			return NULL;
+		}
 	default:
-			fputs("term: Syntax error", stderr);
+			fputs("term_calc: Syntax error(Unknown term type)\n", stderr);
 			return NULL;
 	}
 }
 
-struct node_t* muldiv(struct list_t* token, struct node_t* node)
+struct node_t* muldiv(struct token_t* token, struct node_t* node)
 {
-	if (token->type != TERM && ((int)token->data != MUL || (int)token->data != DIV))
-		return addsub(token, node);
-		return node_create(token->type, token->data, node, factor(token->next));
+	DEBUG(printf("muldiv: type: %d data: %lf\n", token_get_type(token), token_get_data(token));)
+	node_data data = token_get_data(token);
+	node_type type = token_get_type(token);
+	if (type == TERM && ((int)data == MUL || (int)data == DIV))
+		return muldiv(token, node_create(type, data, node, factor(token_next(token))));
+	return node;
 }
 
-struct node_t* addsub(struct list_t* token, struct node_t* node)
+struct node_t* addsub(struct token_t* token, struct node_t* node)
 {
-	if (token->type != TERM && ((int)token->data != ADD || (int)token->data != SUB))
-		return node;
-		return node_create(token->type, token->data, node, factor(token->next));
+	DEBUG(printf("addsub: type: %d data: %lf\n", token_get_type(token), token_get_data(token));)
+	node_data data = token_get_data(token);
+	node_type type = token_get_type(token);
+	if (type == TERM && ((int)data == ADD || (int)data == SUB))
+		return addsub(token, node_create(type, data, node, muldiv(token, factor(token_next(token)))));
+	return node;
+}
+
+struct node_t* code(struct token_t* token)
+{
+	DEBUG(printf("code: type: %d data: %lf\n", token_get_type(token), token_get_data(token));)
+	return expression(token, statement(token));
+}
+
+struct node_t* expression(struct token_t* token, struct node_t* node)
+{
+	DEBUG(printf("expression: type: %d data: %lf\n", token_get_type(token), token_get_data(token));)
+	node_data data = token_get_data(token);
+	node_type type = token_get_type(token);
+	if (type == TERM && ((int)data == SEMICOLON)) {
+		if (token_get(token)->next)
+			return expression(token, node_create(type, data, node, statement(token_next(token))));
+		return node_create(type, data, node, NULL);
+	}
+	if (type == TERM && ((int)data == BEGINSYM)) {
+			return node_create(type, data, node, statement(token));
+	}
+	return node;
+}
+
+struct node_t* statement(struct token_t* token)
+{
+	DEBUG(printf("statement: type: %d data: %lf\n", token_get_type(token), token_get_data(token));)
+	switch (token_get_type(token)) {
+	case KEYWORD:
+		{
+			node_data data = token_get_data(token);
+			node_type type = token_get_type(token);
+			struct node_t* left = statement(token_next(token));
+			return node_create(type, data, left, statement(token));
+		}
+	case IDENT:
+		{
+			node_data data = token_get_data(token);
+			node_type type = token_get_type(token);
+			token_next(token);
+			return node_create(type, data, NULL, NULL);
+		}
+	case TERM:
+			return term_statement(token);
+	default:
+		fputs("statement: Syntax error(Unknown token type)\n", stderr);
+		return NULL;
+	}
+}
+
+struct node_t* term_statement(struct token_t* token)
+{
+	DEBUG(printf("term_statement: type: %d data: %lf\n", token_get_type(token), token_get_data(token));)
+	switch ((int)token_get_data(token)) {
+	case LP:
+		{
+			struct node_t* node = statement(token_next(token));
+			if (token_get_data(token) == RP) {
+				token_next(token);
+				return node;
+			}
+			fputs("term_calc: Syntax error(Missing right parenthesis)\n", stderr);
+			return NULL;
+		}
+	case EQ:
+			return calculation(token_next(token));
+	case BEGINSYM:
+		{
+			struct node_t* node = code(token_next(token));
+			if ((int)token_get_data(token) == ENDSYM)	{
+				if (token_get(token)->next)
+					token_next(token);
+				return node;
+			}
+			fputs("term_statement: Syntax error(Missing endsym)\n", stderr);
+			return NULL;
+		}
+	case RP:
+	case ENDSYM:
+			return NULL;
+	default:
+			fputs("term_statement: Syntax error(Unknown term type)\n", stderr);
+			return NULL;
+	}
 }

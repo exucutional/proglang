@@ -4,25 +4,36 @@
  *  Created on: 6 февр. 2019 г.
  *      Author: Exucutional
  */
-
-#include "tokenization.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
 #include <string.h>
+#include "tokenization.h"
+#include "parsing.h"
+#include "tree_t.h"
 
 int main()
 {
 	char **input = calloc(1,sizeof(char*));
-	*input = strdup("Hello i am 98 years old");
+	*input = strdup(
+			"int main(int a) {"
+			"int x = 3;"
+			"int b = 45;"
+			"int c = 34;"
+			"}");
 
-	struct list_t* tokens = str_to_tokens(input);
-	assert(tokens);
+	struct token_t* token = token_ctor(str_to_tokens(input));
+	assert(token);
 	name_table_dump();
-	list_dump(tokens);
-	list_dtor(tokens);
-	name_table_dtor();
+	list_dump(token->iterator);
 
+	struct node_t* node = code(token);
+	assert(node);
+	node_dump(node);
+
+	node_dtor(node);
+	token_dtor(token);
+	name_table_dtor();
 	return 0;
 }
 

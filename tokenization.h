@@ -25,12 +25,12 @@ enum TERMINALS {
 };
 
 enum TOKEN_TYPES {
-	NO_TYPE = 0,
-	INT,
-	DOUBLE,
-	TERM,
-	IDENT,
-	KEYWORD,
+	NO_TYPE = 0,	//0
+	INT,			//1
+	DOUBLE,			//2
+	TERM,			//3
+	IDENT,			//4
+	KEYWORD,		//5
 };
 
 
@@ -51,17 +51,24 @@ struct list_t
 
 struct token_t
 {
-	struct list_t* token;
+	struct list_t* iterator;
+	struct list_t* token_list;
 };
 
 struct list_t* list_create(list_data data, list_type type, struct list_t* next);
 struct list_t* str_to_tokens(char** str_ptr);
 struct list_t* list_num(char** str_ptr);
-struct list_t* get
+struct token_t* token_ctor(struct list_t* token_list);
+struct list_t* token_get(struct token_t* token);
+list_data token_get_data(struct token_t* token);
+list_type token_get_type(struct token_t* token);
+struct list_t* token_pop(struct token_t* token);
+struct token_t* token_next(struct token_t* token);
 int name_table_search(const char* name);
-char* get_token(char** str_ptr);
+char* token_read(char** str_ptr);
 void name_table_dump();
 void name_table_dtor();
 void list_dump(struct list_t* list);
 void list_dtor(struct list_t* list);
+void token_dtor(struct token_t* token);
 #endif /* TOKENIZATION_H_ */
