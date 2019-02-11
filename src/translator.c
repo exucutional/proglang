@@ -1,7 +1,7 @@
 /*
  * translator.c
  *
- *  Created on: 9 февр. 2019 г.
+ *  Created on: 9 пїЅпїЅпїЅпїЅ. 2019 пїЅ.
  *      Author: Exucutional
  */
 
@@ -92,6 +92,8 @@ void translate_ident(struct node_t* node, char** code)
 		translate_rec(node->left, code);
 		translate_rec(node->right, code);
 		asprintf(code, "%s call %d\n", *code, (int)node->data);
+		for (int i = 0; i < -table_offset[(int)node->data] - 1; i++)
+			asprintf(code, "%s popr rdi\n", *code);
 		asprintf(code, "%s pushr rbx\n", *code);
 	}
 }
@@ -118,8 +120,6 @@ void translate_term(struct node_t* node, char** code)
 			arg_offset = 8;
 			if (node->left)
 				translate_rec(node->left, code);
-			asprintf(code, "%s popr rbp\n", *code);
-			asprintf(code, "%s ret\n", *code);
 			if (node->right)
 				translate_rec(node->right, code);
 			break;
@@ -198,12 +198,13 @@ void translate_keyword(struct node_t* node, char** code)
 				table_offset[(int)node->left->data] = cur_offset;
 			} else
 				if(node->left->type == IDENT) {
-					asprintf(code, "%s :%d\n", *code, (int)node->left->data);
-					table_offset[(int)node->left->data] = -1;
+					asprintf(code, "%s:%d\n", *code, (int)node->left->data);
 					asprintf(code, "%s pushr rbp\n", *code);
 					asprintf(code, "%s movrr rbp rsp\n", *code);
+					int n_arg = 0;
 					if (node->right)
-						translate_arg(node->right, code);
+						n_arg = translate_arg(node->right, code);
+					table_offset[(int)node->left->data] = -1 -n_arg;
 				} else {
 					fputs("translate_keyword: Syntax error\n", stderr);
 				}
@@ -221,12 +222,13 @@ void translate_keyword(struct node_t* node, char** code)
 				table_offset[(int)node->left->data] = cur_offset;
 			} else
 				if(node->left->type == IDENT) {
-					asprintf(code, "%s :%d\n", *code, (int)node->left->data);
-					table_offset[(int)node->left->data] = -1;
+					asprintf(code, "%s:%d\n", *code, (int)node->left->data);
 					asprintf(code, "%s pushr rbp\n", *code);
 					asprintf(code, "%s movrr rbp rsp\n", *code);
+					int n_arg = 0;
 					if (node->right)
-						translate_arg(node->right, code);
+						n_arg = translate_arg(node->right, code);
+					table_offset[(int)node->left->data] = -1 -n_arg;
 				} else {
 					fputs("translate_keyword: Syntax error\n", stderr);
 				}
@@ -241,6 +243,8 @@ void translate_keyword(struct node_t* node, char** code)
 	case RETURNSYM:
 			translate_rec(node->left, code);
 			asprintf(code, "%s popr rbx\n", *code);
+			asprintf(code, "%s popr rbp\n", *code);
+			asprintf(code, "%s ret\n", *code);
 			break;
 	default:
 			fputs("translate_keyword: Unknown node data\n", stderr);
@@ -248,35 +252,36 @@ void translate_keyword(struct node_t* node, char** code)
 	}
 }
 
-void translate_arg(struct node_t* node, char** code)
+int translate_arg(struct node_t* node, char** code)
 {
 	DEBUG(printf("translate_arg: type: %d data: %lf\n", node->type, node->data);)
 	switch ((int)node->data) {
 	case INTSYM:
-		cur_offset += sizeof(int);
+		cur_offset += sizeof(uint64_t);
 		arg_offset += 8;
 		asprintf(code, "%s pushmr rbp %d\n", *code, arg_offset);
-		asprintf(code, "%s popmr rbp %d\n", *code, -cur_offset);
+		asprintf(code, "%s popmr rsp %d\n", *code, -cur_offset);
 		table_offset[(int)node->left->data] = cur_offset;
 		if (node->right)
-			translate_arg(node->right, code);
+			return translate_arg(node->right, code) + 1;
 		break;
 	case DOUBLESYM:
-		cur_offset += sizeof(int);
+		cur_offset += sizeof(uint64_t);
 		asprintf(code, "%s pushmr rbp %d\n", *code, arg_offset);
-		asprintf(code, "%s popmr rbp %d\n", *code, -cur_offset);
+		asprintf(code, "%s popmr rsp %d\n", *code, -cur_offset);
 		table_offset[(int)node->left->data] = cur_offset;
 		if (node->right)
-			translate_arg(node->right, code);
+			return translate_arg(node->right, code) + 1;
 		break;
 	case COMMA:
 		if (node->right)
-			translate_arg(node->right, code);
+			return translate_arg(node->right, code);
 		if (node->left)
-			translate_arg(node->right, code);
+			return translate_arg(node->right, code);
 		break;
 	default:
 		fputs("translate_arg: Unknown node data\n", stderr);
 		break;
 	}
+	return 1;
 }

@@ -11,10 +11,10 @@
 #include <string.h>
 #include <assert.h>
 
-#define DEBUG
+#define NDEBUG
 
 /// Debug macro
-#ifndef DEBUG
+#ifdef NDEBUG
 #define __DEBUG_EXEC(code) ;
 #else
 #define __DEBUG_EXEC(code) code

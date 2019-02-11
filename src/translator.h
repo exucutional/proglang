@@ -1,7 +1,7 @@
 /*
  * translator.h
  *
- *  Created on: 9 февр. 2019 г.
+ *  Created on: 9 пїЅпїЅпїЅпїЅ. 2019 пїЅ.
  *      Author: Exucutional
  */
 
@@ -18,6 +18,6 @@ void translate_rec(struct node_t* node, char** code);
 void translate_term(struct node_t* node, char** code);
 void translate_ident(struct node_t* node, char** code);
 void translate_keyword(struct node_t* node, char** code);
-void translate_arg(struct node_t* node, char** code);
+int translate_arg(struct node_t* node, char** code);
 
 #endif /* SRC_TRANSLATOR_H_ */

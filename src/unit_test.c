@@ -1,7 +1,7 @@
 /*
  * unit_test.c
  *
- *  Created on: 6 февр. 2019 г.
+ *  Created on: 6 пїЅпїЅпїЅпїЅ. 2019 пїЅ.
  *      Author: Exucutional
  */
 
@@ -22,14 +22,17 @@ int main()
 {
 	char **input = calloc(1,sizeof(char*));
 	 *input = strdup(
-			"int f(int a) {"
-			"return a + 3;"
+			"int fact(int n) {"
+			"if(n > 1) {"
+			"return n * fact(n - 1);"
+			"};"
+			"return 1;"
 			"} "
 			"int main() {"
-			"return f(4);"
+			"return fact(10);"
 			"}"
 			);
-
+	char* input_beg = *input;
 	struct token_t* token = token_ctor(str_to_tokens(input));
 	assert(token);
 	//name_table_dump();
@@ -37,7 +40,7 @@ int main()
 	struct node_t* node = code(token);
 	assert(node);
 
-	//translate(node);
+	translate(node);
 
 	char *text = calloc(MEMORY_SIZE, sizeof(char));
 	uint8_t *code = calloc(MEMORY_SIZE, sizeof(uint8_t));
@@ -55,9 +58,10 @@ int main()
 	node_dtor(node);
 	token_dtor(token);
 	name_table_dtor();
-	free(*input);
-	free (code);
-	free (text);
+	free(input_beg);
+	free(cpu.mem_min);
+	free(code);
+	free(text);
 	return 0;
 }
 

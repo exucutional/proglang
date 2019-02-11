@@ -6,26 +6,37 @@ syscall
 pushq 0
 popr rax
 syscall
- :0
+:0
  pushr rbp
  movrr rbp rsp
  pushmr rbp 16
- popmr rbp -4
- pushmr rbp -4
- pushq 3
- add
+ popmr rsp -8
+ pushmr rbp -8
+ pushq 1
+ jle 100
+ pushmr rbp -8
+ pushmr rbp -8
+ pushq 1
+ sub
+ call 0
+ popr rdi
+ pushr rbx
+ mul
  popr rbx
  popr rbp
  ret
- :1
+ :100
+ pushq 1
+ popr rbx
+ popr rbp
+ ret
+:1
  pushr rbp
  movrr rbp rsp
- 
- pushq 4
+ pushq 10
  call 0
  popr rdi
  pushr rbx
  popr rbx
- 
  popr rbp
  ret
