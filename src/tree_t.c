@@ -3,7 +3,7 @@
  * \author Exdev
  * \version 1.2
  */
-#include "asprintf.h"
+//#include "asprintf.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -11,6 +11,7 @@
 #include <string.h>
 #include <ctype.h>
 #include "tree_t.h"
+
 #include "tokenization.h"
 
 #define NODE_CH_WRT(type, name)	\
@@ -76,8 +77,8 @@ void node_dump(struct node_t *tree)
 	fprintf(fout,"}");
 	fclose(fout);
 	free(dump_text);
-	system("dot -Tpng tree.dot -o tree.png");
-	system("xdg-open tree.png");
+	//system("dot -Tpng tree.dot -o tree.png");
+	//system("xdg-open tree.png");
 }
 
 void dump_rec(struct node_t *tree, char **dump_text, int lbl_cur)

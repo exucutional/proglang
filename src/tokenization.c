@@ -6,6 +6,7 @@
  */
 
 #include "tokenization.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
@@ -190,7 +191,7 @@ char* token_read(char** str_ptr)
 
 	while (!isspace(*iter) && *iter != '\0' &&
 		#define DEF_TERM(sym, name)	strncmp(iter, sym, sizeof(sym) - 1) &&
-		#include "terminals.h"
+		#include "../src/terminals.h"
 		#undef DEF_TERM
 			1)
 	{
@@ -203,7 +204,7 @@ char* token_read(char** str_ptr)
 					if (!strncmp(iter, sym, sizeof(sym) - 1)) 				\
 						token_length = sizeof(sym) - 1;						\
 				} while (0);
-		#include "terminals.h"
+		#include "../src/terminals.h"
 		#undef DEF_TERM
 	}
 	char* token = calloc(token_length + 1, sizeof(char));

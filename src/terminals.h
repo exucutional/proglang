@@ -12,8 +12,9 @@ DEF_TERM("<=", LEQ)			//9
 DEF_TERM(">", GTR)			//10
 DEF_TERM(">=", GEQ)			//11
 DEF_TERM(";", SEMICOLON)	//12
-DEF_TERM("!", NOT)			//13
+DEF_TERM("!=", NEQ)			//13
 DEF_TERM("&&", AND)			//14
 DEF_TERM("||", OR)			//15
 DEF_TERM("{", BEGINSYM)		//16
 DEF_TERM("}", ENDSYM)		//17
+DEF_TERM(",", COMMA)		//18
