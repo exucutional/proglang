@@ -1,7 +1,7 @@
 /*
  * tokenization.c
  *
- *  Created on: 5 февр. 2019 г.
+ *  Created on: 5 пїЅпїЅпїЅпїЅ. 2019 пїЅ.
  *      Author: Exucutional
  */
 
@@ -37,6 +37,7 @@ struct token_t* token_ctor(struct list_t* token_list)
 {
 	struct token_t* token = calloc(1, sizeof(struct token_t));
 	assert(token);
+	assert(token_list);
 	token->iterator = token_list;
 	token->token_list = token_list;
 	return token;

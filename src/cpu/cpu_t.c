@@ -11,7 +11,7 @@
 #include <string.h>
 #include <assert.h>
 
-#define NDEBUG
+//#define NDEBUG
 
 /// Debug macro
 #ifdef NDEBUG

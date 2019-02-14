@@ -1,8 +1,8 @@
 
-DEF_KEYWORD("if", IFSYM)			//0
+DEF_KEYWORD("?", IFSYM)				//0
 DEF_KEYWORD("while", WHILESYM)		//1
 DEF_KEYWORD("else", ELSESYM)		//2
 DEF_KEYWORD("do", DOSYM)			//3
-DEF_KEYWORD("int", INTSYM)			//4
+DEF_KEYWORD("simple", INTSYM)		//4
 DEF_KEYWORD("double", DOUBLESYM)	//5
-DEF_KEYWORD("return", RETURNSYM)	//6
+DEF_KEYWORD("out", RETURNSYM)		//6

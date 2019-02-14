@@ -1,0 +1,46 @@
+call 2
+pushr rbx
+pushq 1
+popr rax
+syscall
+pushq 0
+popr rax
+syscall
+:0
+ pushr rbp
+ movrr rbp rsp
+ pushmr rbp 16
+ popmr rsp -8
+ pushmr rbp -8
+ pushq 1
+ jle 100
+ pushmr rbp -8
+ pushmr rbp -8
+ pushq 1
+ sub
+ call 0
+ popr rdi
+ pushr rbx
+ mul
+ popr rbx
+ popr rbp
+ ret
+ :100
+ pushq 1
+ popr rbx
+ popr rbp
+ ret
+:2
+ pushr rbp
+ movrr rbp rsp
+ pushq 4
+ popmr rbp -8
+ pushmr rbp -8
+ pushq 5
+ call 0
+ popr rdi
+ pushr rbx
+ mul
+ popr rbx
+ popr rbp
+ ret

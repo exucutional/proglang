@@ -1,42 +1,11 @@
-call 1
-pushr rbx
-pushq 1
-popr rax
-syscall
-pushq 0
-popr rax
-syscall
-:0
- pushr rbp
- movrr rbp rsp
- pushmr rbp 16
- popmr rsp -8
- pushmr rbp -8
- pushq 1
- jle 100
- pushmr rbp -8
- pushmr rbp -8
- pushq 1
- sub
- call 0
- popr rdi
- pushr rbx
- mul
- popr rbx
- popr rbp
- ret
- :100
- pushq 1
- popr rbx
- popr rbp
- ret
-:1
- pushr rbp
- movrr rbp rsp
- pushq 10
- call 0
- popr rdi
- pushr rbx
- popr rbx
- popr rbp
- ret
+simple f(simple n):
+		? (n > 1):
+				out n * f(n - 1)|
+		@|
+		out 1|
+@
+
+simple main():
+		simple x = 4|
+		out x * f(5)|
+@ 

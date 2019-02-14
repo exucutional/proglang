@@ -31,7 +31,7 @@ int if_label = 100;
 
 void translate(struct node_t* node)
 {
-	FILE* fout = fopen("translate/code.txt", "w");
+	FILE* fout = fopen("translate/code_asm.txt", "w");
 	assert(fout);
 	char *code = calloc(1, (sizeof(char)));
 	for (int i = 0; i < name_table_size; i++)
@@ -192,7 +192,7 @@ void translate_keyword(struct node_t* node, char** code)
 			if (node->right)
 				type = node->right->type;
 			if(node->left->type == IDENT && type == INT) {
-				cur_offset += sizeof(int);
+				cur_offset += sizeof(uint64_t);
 				asprintf(code, "%s pushq %d\n", *code, (int)node->right->data);
 				asprintf(code, "%s popmr rbp %d\n", *code, -cur_offset);
 				table_offset[(int)node->left->data] = cur_offset;
@@ -216,7 +216,7 @@ void translate_keyword(struct node_t* node, char** code)
 			if (node->right)
 				type = node->right->type;
 			if(node->left->type == IDENT && type == DOUBLE) {
-				cur_offset += sizeof(double);
+				cur_offset += sizeof(uint64_t);
 				asprintf(code, "%s pushq %lf\n", *code, node->right->data);
 				asprintf(code, "%s popmr rbp %d\n", *code, -cur_offset);
 				table_offset[(int)node->left->data] = cur_offset;

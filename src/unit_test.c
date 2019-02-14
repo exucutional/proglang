@@ -18,7 +18,7 @@
 
 const size_t MEMORY_SIZE = 4096;
 
-int main()
+int unit_test()
 {
 	char **input = calloc(1,sizeof(char*));
 	 *input = strdup(
@@ -40,12 +40,12 @@ int main()
 	struct node_t* node = code(token);
 	assert(node);
 
-	translate(node);
+	//translate(node);
 
 	char *text = calloc(MEMORY_SIZE, sizeof(char));
 	uint8_t *code = calloc(MEMORY_SIZE, sizeof(uint8_t));
 	FILE *fin = NULL;
-	fin = fopen("translate/code.txt", "r");
+	fin = fopen("translate/code_asm.txt", "r");
 	assert(fin);
 	fread(text, 1024, 1, fin);
 	code_asm(text, &code);
