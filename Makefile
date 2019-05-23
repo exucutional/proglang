@@ -9,7 +9,8 @@ LDFLAGS = -g -no-pie
 SFML = -lsfml-graphics -lsfml-window -lsfml-system 
 VPATH = ./src
 OBJPATH = ./compile
-SRCC = cpu/cpu_asm.c cpu/cpu_t.c tree_t.c tokenization.c parsing.c translator.c unit_test.c prog_run.c
+DIRPATH = ./compile ./compile/cpu
+SRCC = cpu/cpu_asm.c cpu/cpu_t.c tree_t.c tokenization.c parsing.c translator.c prog_run.c
 HEAD = asprintf.h keywords.h parsing.h terminals.h tokenization.h translator.h tree_t.h
 SRCASM = 
 OBJC = $(SRCC:%.c=$(OBJPATH)/%.o)
@@ -17,12 +18,12 @@ OBJASM = $(SRCASM:%.S=$(OBJPATH)/%.o)
 EXECUTABLE_LINUX = run.out ../comp.out
 EXECUTABLE_WINDOWS = run.exe
 
-windows: $(OBJPATH) $(SRCC) $(SRCASM) $(EXECUTABLE_WINDOWS)
+windows: $(DIRPATH) $(SRCC) $(SRCASM) $(EXECUTABLE_WINDOWS)
 
-linux: $(OBJPATH) $(SRCC) $(SRCASM) $(EXECUTABLE_LINUX)
+linux: $(DIRPATH) $(SRCC) $(SRCASM) $(EXECUTABLE_LINUX)
 
-$(OBJPATH):
-	@mkdir $@
+$(DIRPATH):
+	@mkdir -p $@
 
 $(EXECUTABLE_LINUX): $(OBJC) $(OBJASM)
 	@echo "LINKING:"

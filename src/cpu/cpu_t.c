@@ -398,3 +398,7 @@ static inline void cpu_cmd_exit(struct cpu_t *cpu)
 {
 	cpu->trap = TRAP_EXIT;
 }
+static inline void cpu_cmd_procstop(struct cpu_t *cpu)
+{
+    ;
+}
