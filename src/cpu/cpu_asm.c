@@ -8,7 +8,16 @@
 #include <ctype.h>
 #include <string.h>
 
-#define LABEL_MAX 16
+#define NDEBUG
+
+/// Debug macro
+#ifdef NDEBUG
+#define __DEBUG_EXEC(code) ;
+#else
+#define __DEBUG_EXEC(code) code
+#endif
+
+#define LABEL_MAX 256
 struct label_t lbl[LABEL_MAX];
 
 #define SKIP_SPACE	\
@@ -85,11 +94,11 @@ int get_num(char **text_p, uint8_t **code_p)
 
 int get_label(char **text_p, uint8_t **code_p)
 {
-	if(**text_p != ':')
+	if(**text_p != '_')
 	{
 		return -1;
 	}
-	*text_p += sizeof(char);
+	*text_p += sizeof("LABEL");
 	char *text_end = NULL;
 	int temp = 0;
 	temp = strtoll(*text_p, &text_end, 0);
@@ -106,13 +115,11 @@ int put_label(char **text_p, uint8_t **code_p)
 		**(uint8_t**)code_p = CMD_##name;	\
 		*code_p += sizeof(uint8_t);	\
 		*text_p += sizeof(#name) - 1;	\
-		goto SKIP_CMD;	\
 	} else
 #include "cmd_list.h"
 	return -1;
 #undef DEF_CMD
 	char *text_end = NULL;
-	SKIP_CMD: text_end = NULL;
 	int temp = 0;
 	temp = strtoll(*text_p, &text_end, 0);
 	*text_p = text_end;
@@ -138,7 +145,7 @@ long code_asm (char *text, uint8_t **code_p)
 		ip_begin = *code_p;
 		while(*text != '\0')
 		{
-			//printf("%s\n", text);
+			__DEBUG_EXEC(printf("%s\n", text);)
 			SKIP_SPACE;
 			get_label(&text, code_p);
 			SKIP_SPACE;
@@ -149,7 +156,7 @@ long code_asm (char *text, uint8_t **code_p)
 			get_reg(&text, code_p);
 			SKIP_SPACE;
 			get_num(&text, code_p);
-			//printf("\n--------------------------------------\n");
+			__DEBUG_EXEC(printf("\n--------------------------------------\n");)
 		}
 		text = text_begin;
 		*code_p = ip_begin;

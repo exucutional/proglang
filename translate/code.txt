@@ -1,11 +1,13 @@
-simple f(simple n):
-		? (n > 1):
-				out n * f(n - 1)|
+simple akk(simple m, simple n):
+		? (m == 0):
+				out n + 1|
 		@|
-		out 1|
+		? (n == 0):
+				out akk(m - 1, 1)
+		@|
+		out akk(m - 1, akk(m, n - 1))|
 @
 
 simple main():
-		simple x = 4|
-		out x * f(5)|
+		out akk(3, 11)|
 @ 

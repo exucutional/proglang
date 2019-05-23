@@ -1,0 +1,790 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"cp",
+				"cpu_pop"
+			],
+			[
+				"_",
+				"_SYSWRITEEX"
+			],
+			[
+				"X",
+				"X86_64_MOVQ_REG"
+			],
+			[
+				"x86",
+				"X86_64_SYSCALL1"
+			],
+			[
+				"X86_",
+				"X86_64_EXT_CMD"
+			],
+			[
+				"X86_6",
+				"X86_64_EXT_CMD"
+			],
+			[
+				"X86_64_Po",
+				"X86_64_POPR_EXT"
+			],
+			[
+				"SYS",
+				"_SYSWRITE"
+			],
+			[
+				"S",
+				"_SYSWRITEEXAG"
+			],
+			[
+				"_s",
+				"_SYSEXIT"
+			],
+			[
+				"_S",
+				"_SYSWRITEEX"
+			],
+			[
+				"_SY",
+				"_SYSEXIT"
+			],
+			[
+				"sys",
+				"syscallmem"
+			],
+			[
+				"TR",
+				"TRAP_NO_TRAP"
+			],
+			[
+				"sy",
+				"syscallmem"
+			],
+			[
+				"fin",
+				"finsyscall"
+			],
+			[
+				"s",
+				"syscallmem"
+			],
+			[
+				"_SYS",
+				"_SYSWRITEAG"
+			],
+			[
+				"RE",
+				"REG_rsi"
+			],
+			[
+				"reg",
+				"REG_rsp"
+			],
+			[
+				"JMP",
+				"JMP_PREPARE"
+			],
+			[
+				"R",
+				"REG_rax"
+			],
+			[
+				"trap",
+				"TRAP_NO_TRAP"
+			],
+			[
+				"T",
+				"TRAP_SYSCALL"
+			],
+			[
+				"mem",
+				"memory"
+			],
+			[
+				"EX",
+				"EXIT_SUCCESS"
+			],
+			[
+				"G",
+				"GAME_HPP_"
+			],
+			[
+				"GAME",
+				"Gameobject"
+			],
+			[
+				"p",
+				"push_back"
+			],
+			[
+				"tr",
+				"throw"
+			],
+			[
+				"icn",
+				"include"
+			],
+			[
+				"SO",
+				"SOURCESCPATH"
+			],
+			[
+				"hta",
+				"htable"
+			],
+			[
+				"b",
+				"byte"
+			],
+			[
+				"H",
+				"HAGAIN"
+			],
+			[
+				"n",
+				"noprefix"
+			],
+			[
+				"hno",
+				"hnodemax"
+			],
+			[
+				"str",
+				"string.h\tstandard header"
+			],
+			[
+				"hn",
+				"hnodearray"
+			],
+			[
+				"h",
+				"hnodearray"
+			],
+			[
+				"hnode",
+				"hnodearray"
+			],
+			[
+				"Hashtable",
+				"Hashtable"
+			],
+			[
+				"hash",
+				"hashtable"
+			],
+			[
+				"k",
+				"key_tt"
+			],
+			[
+				"OB",
+				"OBJECTSASM"
+			],
+			[
+				"SOU",
+				"SOURCESASM"
+			],
+			[
+				"O",
+				"OBJECTSASM"
+			],
+			[
+				"hnod",
+				"hnodetmp"
+			],
+			[
+				"std",
+				"stdlib.h\tstandard header"
+			],
+			[
+				"size",
+				"size_t"
+			],
+			[
+				"val",
+				"value"
+			],
+			[
+				"has",
+				"hashtable"
+			],
+			[
+				"hah",
+				"hashtable"
+			],
+			[
+				"key",
+				"key_t"
+			],
+			[
+				"inc",
+				"include"
+			],
+			[
+				"stdi",
+				"stdio.h\tstandard header"
+			],
+			[
+				"in",
+				"index"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "/home/exucutional/Desktop/dev_room/jcompil/proglang/translate/code.txt",
+			"settings":
+			{
+				"buffer_size": 179,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "prog_run.c",
+			"settings":
+			{
+				"buffer_size": 1508,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "cpu/cpu_t.c",
+			"settings":
+			{
+				"buffer_size": 8410,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "cpu/cpu_t.h",
+			"settings":
+			{
+				"buffer_size": 1632,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/home/exucutional/Desktop/dev_room/jcompil/proglang/Makefile",
+			"settings":
+			{
+				"buffer_size": 1080,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/home/exucutional/Desktop/dev_room/jcompil/proglang/translate/code_asm.txt",
+			"settings":
+			{
+				"buffer_size": 919,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "Packages/Makefile/Make.sublime-build",
+	"build_system_choices":
+	[
+		[
+			[
+				[
+					"Packages/C++/C++ Single File.sublime-build",
+					""
+				],
+				[
+					"Packages/C++/C++ Single File.sublime-build",
+					"Run"
+				]
+			],
+			[
+				"Packages/C++/C++ Single File.sublime-build",
+				""
+			]
+		],
+		[
+			[
+				[
+					"Packages/C++/C++ Single File.sublime-build",
+					""
+				],
+				[
+					"Packages/C++/C++ Single File.sublime-build",
+					"Run"
+				],
+				[
+					"Packages/Makefile/Make.sublime-build",
+					""
+				],
+				[
+					"Packages/Makefile/Make.sublime-build",
+					"Clean"
+				]
+			],
+			[
+				"Packages/Makefile/Make.sublime-build",
+				""
+			]
+		],
+		[
+			[
+				[
+					"Packages/Makefile/Make.sublime-build",
+					""
+				],
+				[
+					"Packages/Makefile/Make.sublime-build",
+					"Clean"
+				]
+			],
+			[
+				"Packages/Makefile/Make.sublime-build",
+				""
+			]
+		],
+		[
+			[
+				[
+					"Packages/Makefile/Make.sublime-build",
+					""
+				],
+				[
+					"Packages/Makefile/Make.sublime-build",
+					"Clean"
+				],
+				[
+					"Packages/ShellScript/ShellScript.sublime-build",
+					""
+				]
+			],
+			[
+				"Packages/Makefile/Make.sublime-build",
+				""
+			]
+		]
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"",
+				"View: Toggle Menu"
+			]
+		],
+		"width": 0.0
+	},
+	"console":
+	{
+		"height": 212.0,
+		"history":
+		[
+			"run.out",
+			"./run.out"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/home/exucutional/Desktop/dev_room/jcompil/proglang"
+	],
+	"file_history":
+	[
+		"/home/exucutional/Desktop/dev_room/jcompil/proglang/src/translator.c",
+		"/home/exucutional/Desktop/dev_room/jcompil/proglang/src/cpu/cpu_asm.c",
+		"/home/exucutional/Desktop/dev_room/jcompil/proglang/src/cpu/cpu_t.c",
+		"/home/exucutional/Desktop/dev_room/jcompil/proglang/src/cpu/cpu_t.h",
+		"/home/exucutional/Desktop/dev_room/jcompil/proglang/src/prog_run.c",
+		"/home/exucutional/Desktop/dev_room/jcompil/proglang/Makefile",
+		"/home/exucutional/Desktop/dev_room/jcompil/proglang/src/parsing.c",
+		"/home/exucutional/Desktop/dev_room/jcompil/proglang/src/cpu/cpu_run.c",
+		"/home/exucutional/Desktop/dev_room/jcompil/proglang/translate/code_asm.txt",
+		"/home/exucutional/Desktop/dev_room/jcompil/jfiles/syscalls.S",
+		"/home/exucutional/Desktop/dev_room/jcompil/jfiles/code.masm",
+		"/home/exucutional/Desktop/dev_room/jcompil/src/cpu/cpu_t.cpp",
+		"/home/exucutional/Desktop/dev_room/jcompil/src/cpu/cpu_t.h",
+		"/home/exucutional/Desktop/dev_room/jcompil/src/jcompil.cpp",
+		"/home/exucutional/Desktop/dev_room/jcompil/src/jcompil.hpp",
+		"/home/exucutional/Desktop/dev_room/jcompil/src/main.cpp",
+		"/home/exucutional/Desktop/dev_room/jcompil/Makefile",
+		"/home/exucutional/Desktop/dev_room/jcompil/src/cpu/reg_list.h",
+		"/home/exucutional/Desktop/dev_room/jcompil/jfiles/bitcode.fjit",
+		"/home/exucutional/Desktop/dev_room/jcompil/src/cpu/cmd_list.h",
+		"/home/exucutional/Desktop/dev_room/jcompil/cpu-old/factorial_cpu.masm",
+		"/home/exucutional/Desktop/dev_room/jcompil/jfiles/factorial_cpu.masm",
+		"/home/exucutional/Desktop/dev_room/jcompil/cpu-old/cpu_run.c",
+		"/home/exucutional/Desktop/dev_room/jcompil/src/asm.S",
+		"/home/exucutional/Desktop/dev_room/TheGame/src/gameobjects.cpp",
+		"/home/exucutional/Desktop/dev_room/TheGame/src/game.cpp",
+		"/home/exucutional/Desktop/dev_room/TheGame/src/gameobjects.hpp",
+		"/home/exucutional/Desktop/dev_room/TheGame/src/game.hpp",
+		"/home/exucutional/Desktop/dev_room/TheGame/src/main.cpp",
+		"/home/exucutional/Desktop/dev_room/TheGame/Makefile",
+		"/home/exucutional/Desktop/dev_room/TheGame/.gitignore",
+		"/home/exucutional/Desktop/dev_room/TheGame/src/TheGame.sublime-project",
+		"/home/exucutional/Desktop/dev_room/TheGame/src/TheGame.sublime-workspace",
+		"/home/exucutional/Desktop/dev_room/TheGame/src/init.cpp",
+		"/home/exucutional/Desktop/dev_room/TheGame/src/init.hpp",
+		"/home/exucutional/Desktop/dev_room/TheGame/src/Gameobjects.hpp",
+		"/home/exucutional/Desktop/dev_room/TheGame/src/Gameobjects.cpp",
+		"/home/exucutional/Desktop/dev_room/mvector/src/mvectorboolimplem.cpp",
+		"/home/exucutional/Desktop/dev_room/mvector/src/mvectorbool.hpp",
+		"/home/exucutional/Desktop/dev_room/mvector/src/mvectorimplem.cpp",
+		"/home/exucutional/Desktop/dev_room/mvector/src/mvector.hpp",
+		"/home/exucutional/Desktop/dev_room/mvector/src/mexcpt.hpp",
+		"/home/exucutional/Desktop/dev_room/mvector/Makefile",
+		"/home/exucutional/Desktop/dev_room/mvector/src/unit_test.cpp",
+		"/home/exucutional/Desktop/dev_room/mvector/src/mvectorboolimplem.hpp",
+		"/home/exucutional/asm/hash/textproc.h",
+		"/home/exucutional/asm/hash/textproc.c",
+		"/home/exucutional/asm/hash/main.c",
+		"/home/exucutional/asm/hash/hash.h",
+		"/home/exucutional/asm/hash/hash.c",
+		"/home/exucutional/asm/hash/Makefile",
+		"/home/exucutional/stm32f0_ARM/labs/03_control_clock/Makefile",
+		"/home/exucutional/stm32f0_ARM/labs/03_control_clock/main.c",
+		"/home/exucutional/stm32f0_ARM/labs/03_control_clock/main",
+		"/home/exucutional/asm/c<->asm/main.c",
+		"/home/exucutional/asm/password/password",
+		"/home/exucutional/asm/c<->asm/asm.asm",
+		"/home/exucutional/asm/password/main.c"
+	],
+	"find":
+	{
+		"height": 32.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"mcap",
+			"gameobjects",
+			"makefile",
+			"dir",
+			"catch (Mexcept)",
+			"reinterpret_cast<bool*>(",
+			"Boolceel",
+			"class T",
+			"OBJECT",
+			"SOURCE",
+			"key_t",
+			"key_tt"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"catch (const Mexcept& mxcpt)",
+			"",
+			"Boolcell",
+			"typename T",
+			"OBJ",
+			"SRC",
+			"key_tt",
+			""
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 4,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "/home/exucutional/Desktop/dev_room/jcompil/proglang/translate/code.txt",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 179,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								45,
+								45
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "prog_run.c",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1508,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								707,
+								707
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 11.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "cpu/cpu_t.c",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 8410,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								837,
+								837
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 477.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "cpu/cpu_t.h",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1632,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								887,
+								887
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 1030.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "/home/exucutional/Desktop/dev_room/jcompil/proglang/Makefile",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1080,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								546,
+								546
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Makefile/Makefile.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "/home/exucutional/Desktop/dev_room/jcompil/proglang/translate/code_asm.txt",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 919,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								919,
+								919
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 32.0
+	},
+	"input":
+	{
+		"height": 0.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.exec":
+	{
+		"height": 168.0
+	},
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "",
+	"project": "proglang.sublime-project",
+	"replace":
+	{
+		"height": 60.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 750.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"",
+				"~/Desktop/dev_room/jcompil/proglang/src/proglang.sublime-project"
+			]
+		],
+		"width": 570.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": true,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 266.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

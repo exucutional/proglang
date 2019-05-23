@@ -31,7 +31,7 @@ int if_label = 100;
 
 void translate(struct node_t* node)
 {
-	FILE* fout = fopen("translate/code_asm.txt", "w");
+	FILE* fout = fopen("jfiles/code.masm", "w");
 	assert(fout);
 	char *code = calloc(1, (sizeof(char)));
 	for (int i = 0; i < name_table_size; i++)
@@ -48,6 +48,7 @@ void translate(struct node_t* node)
 	if (!code)
 		fputs("Missing main", stderr);
 	translate_rec(node, &code);
+	asprintf(&code, "%sprocstop\n", code);
 	assert(code);
 	fprintf(fout, code);
 	fclose(fout);
@@ -89,8 +90,8 @@ void translate_ident(struct node_t* node, char** code)
 	if (table_offset[(int)node->data] >= 0)
 		asprintf(code, "%s pushmr rbp %d\n", *code, -table_offset[(int)node->data]);
 	else {
-		translate_rec(node->left, code);
 		translate_rec(node->right, code);
+		translate_rec(node->left, code);
 		asprintf(code, "%s call %d\n", *code, (int)node->data);
 		for (int i = 0; i < -table_offset[(int)node->data] - 1; i++)
 			asprintf(code, "%s popr rdi\n", *code);
@@ -198,9 +199,13 @@ void translate_keyword(struct node_t* node, char** code)
 				table_offset[(int)node->left->data] = cur_offset;
 			} else
 				if(node->left->type == IDENT) {
-					asprintf(code, "%s:%d\n", *code, (int)node->left->data);
+					asprintf(code, "%s_LABEL %d\n", *code, (int)node->left->data);
 					asprintf(code, "%s pushr rbp\n", *code);
 					asprintf(code, "%s movrr rbp rsp\n", *code);
+					asprintf(code, "%s pushr rsp\n", *code);
+					asprintf(code, "%s pushq 32\n", *code);
+					asprintf(code, "%s sub\n", *code);
+					asprintf(code, "%s popr rsp\n", *code);
 					int n_arg = 0;
 					if (node->right)
 						n_arg = translate_arg(node->right, code);
@@ -225,6 +230,10 @@ void translate_keyword(struct node_t* node, char** code)
 					asprintf(code, "%s:%d\n", *code, (int)node->left->data);
 					asprintf(code, "%s pushr rbp\n", *code);
 					asprintf(code, "%s movrr rbp rsp\n", *code);
+					asprintf(code, "%s pushr rsp\n", *code);
+					asprintf(code, "%s pushq 32 \n", *code);
+					asprintf(code, "%s sub\n", *code);
+					asprintf(code, "%s popr rsp\n", *code);
 					int n_arg = 0;
 					if (node->right)
 						n_arg = translate_arg(node->right, code);
@@ -237,12 +246,16 @@ void translate_keyword(struct node_t* node, char** code)
 	case IFSYM:
 			translate_rec(node->left, code);
 			translate_rec(node->right, code);
-			asprintf(code, "%s :%d\n", *code, if_label);
+			asprintf(code, "%s _LABEL %d\n", *code, if_label);
 			if_label++;
 			break;
 	case RETURNSYM:
 			translate_rec(node->left, code);
 			asprintf(code, "%s popr rbx\n", *code);
+			asprintf(code, "%s pushr rsp\n", *code);
+			asprintf(code, "%s pushq 32\n", *code);
+			asprintf(code, "%s add\n", *code);
+			asprintf(code, "%s popr rsp\n", *code);
 			asprintf(code, "%s popr rbp\n", *code);
 			asprintf(code, "%s ret\n", *code);
 			break;
@@ -257,18 +270,18 @@ int translate_arg(struct node_t* node, char** code)
 	DEBUG(printf("translate_arg: type: %d data: %lf\n", node->type, node->data);)
 	switch ((int)node->data) {
 	case INTSYM:
-		cur_offset += sizeof(uint64_t);
+		cur_offset += 8;
 		arg_offset += 8;
 		asprintf(code, "%s pushmr rbp %d\n", *code, arg_offset);
-		asprintf(code, "%s popmr rsp %d\n", *code, -cur_offset);
+		asprintf(code, "%s popmr rbp %d\n", *code, -cur_offset);
 		table_offset[(int)node->left->data] = cur_offset;
 		if (node->right)
 			return translate_arg(node->right, code) + 1;
 		break;
 	case DOUBLESYM:
-		cur_offset += sizeof(uint64_t);
+		cur_offset += 8;
 		asprintf(code, "%s pushmr rbp %d\n", *code, arg_offset);
-		asprintf(code, "%s popmr rsp %d\n", *code, -cur_offset);
+		asprintf(code, "%s popmr rbp %d\n", *code, -cur_offset);
 		table_offset[(int)node->left->data] = cur_offset;
 		if (node->right)
 			return translate_arg(node->right, code) + 1;

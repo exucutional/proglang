@@ -11,7 +11,7 @@
 #include <string.h>
 #include <assert.h>
 
-//#define NDEBUG
+#define NDEBUG
 
 /// Debug macro
 #ifdef NDEBUG
@@ -27,18 +27,21 @@ static inline void cpu_cmd_##name(struct cpu_t*);
 #undef DEF_CMD
 
 
-int cpu_init(struct cpu_t *cpu, uint8_t **code_p)
+int cpu_init(struct cpu_t *cpu, uint8_t **code_p, size_t mem_cap)
 {
 	//cpu->reg[REG_rax] = SYSCALL_EXIT;
 	cpu->trap = TRAP_NO_TRAP;
-	char *memory = calloc(4096, sizeof(uint8_t));
+	char *memory = calloc(mem_cap, sizeof(uint8_t));
 	memcpy(memory, *code_p, 512);
-	cpu_set_rsp(cpu, memory + 2048);
+	cpu_set_rsp(cpu, memory + mem_cap);
 	cpu_set_rip(cpu, memory);
-	cpu_set_mem(cpu, memory, memory + 4096);
+	cpu_set_mem(cpu, memory, memory + mem_cap);
 	return 0;
 }
-
+int cpu_dtor(struct cpu_t *cpu)
+{
+	free(cpu->mem_min);
+}
 /// Set instr pointer
 int cpu_set_rip(struct cpu_t *cpu, void *code)
 {
@@ -67,6 +70,7 @@ static inline uint8_t cpu_rip_byte(struct cpu_t *cpu)
 	__DEBUG_EXEC(
 	if (cpu->rip > cpu->mem_max || cpu->rip < cpu->mem_min) {
 		cpu->trap = TRAP_ERROR_MEMORY;
+		fprintf(stderr, "ERROR MEMORY\n");
 		assert(0);
 		return 0;
 	})
@@ -137,7 +141,7 @@ int cpu_syscall(struct cpu_t *cpu)
 		break;
 	case SYSCALL_OUTQ:
 		tmp = cpu_pop(cpu);
-		printf("\n%lu\n", tmp);
+		printf("\n%lld\n", tmp);
 		cpu_push(cpu, tmp);
 		cpu->trap = TRAP_NO_TRAP;
 		break;
@@ -147,6 +151,7 @@ int cpu_syscall(struct cpu_t *cpu)
 		break;
 	default:
 		cpu->trap = TRAP_ERROR_SYSCALL;
+		fprintf(stderr, "ERROR_SYSCALL: %d\n", cpu->reg[REG_rax]);
 		assert(0);
 		return -1;
 	}
@@ -155,7 +160,7 @@ int cpu_syscall(struct cpu_t *cpu)
 
 long cpu_run(struct cpu_t *cpu)
 {
-	long cpu_cmd_count = 0;
+	uint64_t cpu_cmd_count = 0;
 	while (1) {
 		// Handle cpu-traps
 		switch (cpu->trap) {
@@ -200,6 +205,7 @@ long cpu_run(struct cpu_t *cpu)
 		#undef DEF_CMD
 		default:
 			cpu->trap = TRAP_ERROR_INSTR;
+			fprintf(stderr, "ERROR INSTR %d\n", cmd);
 			assert(0);
 			return -1;
 		}
@@ -254,15 +260,27 @@ static inline void cpu_cmd_popmr(struct cpu_t *cpu)
 
 static inline void cpu_cmd_add(struct cpu_t *cpu)
 {
-	cpu_push(cpu, cpu_pop(cpu) + cpu_pop(cpu));
+	uint64_t tmp1 = cpu_pop(cpu);
+	uint64_t tmp2 = cpu_pop(cpu);
+	cpu_push(cpu, tmp1 + tmp2);
+}	
+static inline void cpu_cmd_addr(struct cpu_t *cpu)
+{
+	uint64_t tmp1 = cpu_rip_byte(cpu);
+	uint64_t tmp2 = cpu_rip_byte(cpu);
+	cpu->reg[tmp1] += cpu->reg[tmp2];
 }
-
 static inline void cpu_cmd_sub(struct cpu_t *cpu)
 {
 	uint64_t tmp = cpu_pop(cpu);
 	cpu_push(cpu, cpu_pop(cpu) - tmp);
 }
-
+static inline void cpu_cmd_subr(struct cpu_t *cpu)
+{
+	uint64_t tmp1 = cpu_rip_byte(cpu);
+	uint64_t tmp2 = cpu_rip_byte(cpu);
+	cpu->reg[tmp1] -= cpu->reg[tmp2];
+}
 static inline void cpu_cmd_mul(struct cpu_t *cpu)
 {
 	cpu_push(cpu, cpu_pop(cpu) * cpu_pop(cpu));
@@ -297,65 +315,86 @@ static inline void cpu_cmd_movrr(struct cpu_t *cpu)
 	uint64_t tmp = cpu_rip_byte(cpu);
 	cpu->reg[tmp] = cpu->reg[cpu_rip_byte(cpu)];
 }
-
-static inline void cpu_cmd_jl(struct cpu_t *cpu)
+static inline void cpu_cmd_movq(struct cpu_t *cpu)
 {
-	uint64_t tmp1 = cpu_pop(cpu);
-	uint64_t tmp2 = cpu_pop(cpu);
-	if (tmp2 < tmp1) {
-		cpu_cmd_jmp(cpu);
-	}
-	else cpu->rip += sizeof(uint64_t);
+	uint64_t tmp = cpu_rip_byte(cpu);
+	cpu->reg[tmp] = cpu_rip_qword(cpu);
 }
-
-static inline void cpu_cmd_jg(struct cpu_t *cpu)
+static inline void cpu_cmd_movmrr(struct cpu_t *cpu)
 {
-	uint64_t tmp1 = cpu_pop(cpu);
-	uint64_t tmp2 = cpu_pop(cpu);
-	if (tmp2 > tmp1) {
-		//cpu_push(cpu, tmp2);
-		//cpu_push(cpu, tmp1);
-		cpu_cmd_jmp(cpu);
-	}
-	else cpu->rip += sizeof(uint64_t);
+	uint64_t tmp1 = cpu_rip_byte(cpu);
+	uint64_t tmp2 = cpu_rip_qword(cpu);
+	uint64_t tmp3 = cpu_rip_byte(cpu);
+	*(uint64_t*)(cpu->reg[tmp1] + tmp2) = cpu->reg[tmp3];
 }
-
-static inline void cpu_cmd_jle(struct cpu_t *cpu)
+static inline void cpu_cmd_movrmr(struct cpu_t *cpu)
 {
-	uint64_t tmp1 = cpu_pop(cpu);
-	uint64_t tmp2 = cpu_pop(cpu);
-	if (tmp2 <= tmp1) {
-		cpu_cmd_jmp(cpu);
-	}
-	else cpu->rip += sizeof(uint64_t);
+	uint64_t tmp1 = cpu_rip_byte(cpu);
+	uint64_t tmp2 = cpu_rip_byte(cpu);
+	uint64_t tmp3 = cpu_rip_qword(cpu);
+	cpu->reg[tmp1] = *(uint64_t*)(cpu->reg[tmp2] + tmp3);
 }
-
-static inline void cpu_cmd_jge(struct cpu_t *cpu)
-{
-	uint64_t tmp1 = cpu_pop(cpu);
-	uint64_t tmp2 = cpu_pop(cpu);
-	if (tmp2 >= tmp1) {
-		cpu_cmd_jmp(cpu);
-	}
-	else cpu->rip += sizeof(uint64_t);
-}
-
 static inline void cpu_cmd_jeq(struct cpu_t *cpu)
 {
 	uint64_t tmp1 = cpu_pop(cpu);
 	uint64_t tmp2 = cpu_pop(cpu);
-	if (tmp2 == tmp1) {
+	if (tmp2 == tmp1)
+	{
 		cpu_cmd_jmp(cpu);
 	}
 	else cpu->rip += sizeof(uint64_t);
 }
-
 static inline void cpu_cmd_jne(struct cpu_t *cpu)
 {
 	uint64_t tmp1 = cpu_pop(cpu);
 	uint64_t tmp2 = cpu_pop(cpu);
-	if (tmp2 != tmp1) {
+	if (tmp2 != tmp1)
+	{
 		cpu_cmd_jmp(cpu);
 	}
 	else cpu->rip += sizeof(uint64_t);
+}
+static inline void cpu_cmd_jl(struct cpu_t *cpu)
+{
+	uint64_t tmp1 = cpu_pop(cpu);
+	uint64_t tmp2 = cpu_pop(cpu);
+	if (tmp2 < tmp1)
+	{
+		cpu_cmd_jmp(cpu);
+	}
+	else cpu->rip += sizeof(uint64_t);
+}
+static inline void cpu_cmd_jle(struct cpu_t *cpu)
+{
+	uint64_t tmp1 = cpu_pop(cpu);
+	uint64_t tmp2 = cpu_pop(cpu);
+	if (tmp2 <= tmp1)
+	{
+		cpu_cmd_jmp(cpu);
+	}
+	else cpu->rip += sizeof(uint64_t);
+}
+static inline void cpu_cmd_jg(struct cpu_t *cpu)
+{
+	uint64_t tmp1 = cpu_pop(cpu);
+	uint64_t tmp2 = cpu_pop(cpu);
+	if (tmp2 > tmp1)
+	{
+		cpu_cmd_jmp(cpu);
+	}
+	else cpu->rip += sizeof(uint64_t);
+}
+static inline void cpu_cmd_jge(struct cpu_t *cpu)
+{
+	uint64_t tmp1 = cpu_pop(cpu);
+	uint64_t tmp2 = cpu_pop(cpu);
+	if (tmp2 >= tmp1)
+	{
+		cpu_cmd_jmp(cpu);
+	}
+	else cpu->rip += sizeof(uint64_t);
+}
+static inline void cpu_cmd_exit(struct cpu_t *cpu)
+{
+	cpu->trap = TRAP_EXIT;
 }
